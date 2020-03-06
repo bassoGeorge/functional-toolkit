@@ -1,0 +1,30 @@
+{
+  "name": "es6-starter",
+  "version": "1.0.0",
+  "description": "Starter kit with node and es6 support",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon --exec babel-node src/index.js",
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
+    "format-staged-files": "pretty-quick --staged"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/node": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "nodemon": "^2.0.2",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test && npm run format-staged-files",
+      "pre-push": "npm test"
+    }
+  }
+}
