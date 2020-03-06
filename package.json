@@ -1,7 +1,7 @@
 {
-  "name": "es6-starter",
+  "name": "functional-toolkit",
   "version": "1.0.0",
-  "description": "Starter kit with node and es6 support",
+  "description": "Functionaly Light JS",
   "main": "index.js",
   "scripts": {
     "start": "nodemon --exec babel-node src/index.js",

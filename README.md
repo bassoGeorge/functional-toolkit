@@ -1,3 +1,3 @@
-# ES6 node starter
+# Functional Toolkit
 
-With jest
+Working on the Functionally Light JS book
