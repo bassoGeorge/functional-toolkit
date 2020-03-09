@@ -68,6 +68,9 @@ export function reverseArgs(fn) {
   };
 }
 
+/**
+ * Creates a curried version of the function which accepts one argument at a time
+ */
 export function curry(fn, arity = fn.length) {
   return (function nextCurried(prevArgs) {
     // This function always returns a new function, which might recursively call this or else call fn() based on the
@@ -75,6 +78,28 @@ export function curry(fn, arity = fn.length) {
 
     return function curried(nextArg) {
       const args = [...prevArgs, nextArg];
+      if (args.length >= arity) {
+        return fn(...args);
+      } else {
+        return nextCurried(args);
+      }
+    };
+  })([]);
+}
+
+/**
+ * Creates a curried version which can accept as many arguments as needed at any point
+ * @param fn
+ * @param arity
+ * @returns {curried}
+ */
+export function looseCurry(fn, arity = fn.length) {
+  return (function nextCurried(prevArgs) {
+    // This function always returns a new function, which might recursively call this or else call fn() based on the
+    // situation with the arguments
+
+    return function curried(...nextArgs) {
+      const args = [...prevArgs, ...nextArgs];
       if (args.length >= arity) {
         return fn(...args);
       } else {

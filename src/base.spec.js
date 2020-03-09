@@ -2,7 +2,7 @@ import {
   constant,
   curry,
   gatherArgs,
-  identity,
+  identity, looseCurry,
   partial,
   partialRight,
   reverseArgs,
@@ -156,5 +156,25 @@ describe(curry, () => {
 
     const curriedSum = curry(sum);
     expect(curriedSum(1)(2)).toEqual(3);
+  });
+
+  it("creates a curried version of the given function by allowing us to specify the arity", () => {
+    function sum(...items) {
+      return items.reduce((a, b) => a + b);
+    }
+
+    const curriedSum = curry(sum, 2);
+    expect(curriedSum(1)(2)).toEqual(3);
+  });
+});
+
+describe(looseCurry, () => {
+  it("creates a curried version of the given function by figuring out its arity on its own", () => {
+    function sum(...items) {
+      return items.reduce((a, b) => a + b) ;
+    }
+
+    const curriedSum = looseCurry(sum, 5);
+    expect(curriedSum(1)(2, 3)(4)(5)).toEqual(15);
   });
 });
