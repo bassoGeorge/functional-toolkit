@@ -1,4 +1,4 @@
-import {constant, gatherArgs, identity, spreadArgs, unary} from "./base";
+import {constant, gatherArgs, identity, partial, partialRight, reverseArgs, spreadArgs, unary} from "./base";
 
 describe(unary, () => {
   it("forces only one argument through to the given function", () => {
@@ -63,5 +63,74 @@ describe(gatherArgs, () => {
 
     const total = [1, 2, 3].reduce(gatherArgs(sum));
     expect(total).toEqual(6);
+  })
+})
+
+
+describe(partial, () => {
+  it("allows partial application by providing a set of arguments upfront", () => {
+    const target = jest.fn().mockReturnValue("return")
+
+    const partiallyApplied = partial(target, "a", "b");
+    expect(target).not.toBeCalled();
+
+    const result = partiallyApplied("c", "d");
+
+    expect(target).toBeCalledWith("a", "b", "c", "d");
+    expect(result).toEqual("return")
+  })
+
+  it("works with gatherArgs utility", () => {
+    function add([a, b]) { return a + b };
+
+    const add2 = partial(gatherArgs(add), 2);
+    expect(add2(10)).toEqual(12);
+  })
+
+  it("is useful in real life situations", () => {
+    const ajax = jest.fn().mockImplementation( (url, data, callback) => null);
+    const callback = jest.fn();
+
+    const getPerson = partial(ajax, "/api/person");
+    getPerson({userId: 100}, callback);
+    expect(ajax).toBeCalledWith("/api/person", {userId: 100}, callback);
+
+    const getCurrentUser = partial(getPerson, { userId: 1 })
+    getCurrentUser(callback);
+    expect(ajax).toBeCalledWith("/api/person", {userId: 1}, callback);
+  })
+})
+
+describe(partialRight, () => {
+  it("works like partial, except allowing you to specify the right hand arguments first", () => {
+    const target = jest.fn().mockReturnValue("return");
+    const partiallyApplied = partialRight(target, "a", "b");
+
+    expect(target).not.toBeCalled();
+
+    const result = partiallyApplied("c", "d");
+    expect(result).toEqual("return");
+    expect(target).toBeCalledWith("c", "d", "a", "b");
+
+  })
+})
+
+describe(reverseArgs, () => {
+  it("creates a function with reversed arguments", () => {
+    const target = (a, b) => "" + a + " | " + b
+
+    const reversed = reverseArgs(target);
+
+    const result = reversed("First", "Second");
+    expect(result).toEqual("Second | First");
+  })
+
+  it("works well with the gatherArgs utility", () => {
+    const target = ([a, b]) => "" + a + " | " + b
+
+    const reversed = reverseArgs(gatherArgs(target));
+
+    const result = reversed("First", "Second");
+    expect(result).toEqual("Second | First");
   })
 })

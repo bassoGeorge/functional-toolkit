@@ -48,3 +48,26 @@ export function gatherArgs(fn) {
     return fn(args);
   }
 }
+
+
+/**
+ * creates a partially applied function which has the initial presets in place
+ */
+export function partial(fn, ...presetArgs) {
+  return function partiallyApplied(...laterArgs) {
+    return fn(...presetArgs, ...laterArgs)
+  }
+}
+
+export function partialRight(fn, ...presetArgs) {
+  return function partiallyApplied(...laterArgs) {
+    return fn(...laterArgs, ...presetArgs)
+  }
+}
+
+
+export function reverseArgs(fn) {
+  return function reveredFn(...args) {
+    return fn(...args.reverse())
+  }
+}
