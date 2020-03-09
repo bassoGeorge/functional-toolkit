@@ -7,7 +7,7 @@ import {
   partialRight,
   reverseArgs,
   spreadArgs,
-  unary
+  unary, uncurry
 } from "./base";
 
 describe(unary, () => {
@@ -178,3 +178,13 @@ describe(looseCurry, () => {
     expect(curriedSum(1)(2, 3)(4)(5)).toEqual(15);
   });
 });
+
+
+describe(uncurry, () => {
+  it("creates the uncurried form of a function", () => {
+    const sum = a => b => c => a + b + c;
+
+    const uncurriedSum = uncurry(sum);
+    expect(uncurriedSum(1, 2, 3)).toEqual(6);
+  })
+})

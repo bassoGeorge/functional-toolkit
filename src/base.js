@@ -108,3 +108,12 @@ export function looseCurry(fn, arity = fn.length) {
     };
   })([]);
 }
+
+
+export function uncurry(fn) {
+  return function unCurried(...args) {
+    return args.reduce( (acc, arg) => {
+      return acc(arg);
+    }, fn)
+  }
+}
