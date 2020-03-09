@@ -26,9 +26,8 @@ export function identity(v) {
 export function constant(v) {
   return function value() {
     return v;
-  }
+  };
 }
-
 
 /**
  * an adapter for functions which accept positional args, but we want to pass array
@@ -36,9 +35,8 @@ export function constant(v) {
 export function spreadArgs(fn) {
   return function spreadFn(argsArr) {
     return fn(...argsArr);
-  }
+  };
 }
-
 
 /**
  * an adapter for functions which accept an array, but we want to pass in spread out
@@ -46,28 +44,42 @@ export function spreadArgs(fn) {
 export function gatherArgs(fn) {
   return function gatherFn(...args) {
     return fn(args);
-  }
+  };
 }
-
 
 /**
  * creates a partially applied function which has the initial presets in place
  */
 export function partial(fn, ...presetArgs) {
   return function partiallyApplied(...laterArgs) {
-    return fn(...presetArgs, ...laterArgs)
-  }
+    return fn(...presetArgs, ...laterArgs);
+  };
 }
 
 export function partialRight(fn, ...presetArgs) {
   return function partiallyApplied(...laterArgs) {
-    return fn(...laterArgs, ...presetArgs)
-  }
+    return fn(...laterArgs, ...presetArgs);
+  };
 }
-
 
 export function reverseArgs(fn) {
   return function reveredFn(...args) {
-    return fn(...args.reverse())
-  }
+    return fn(...args.reverse());
+  };
+}
+
+export function curry(fn, arity = fn.length) {
+  return (function nextCurried(prevArgs) {
+    // This function always returns a new function, which might recursively call this or else call fn() based on the
+    // situation with the arguments
+
+    return function curried(nextArg) {
+      const args = [...prevArgs, nextArg];
+      if (args.length >= arity) {
+        return fn(...args);
+      } else {
+        return nextCurried(args);
+      }
+    };
+  })([]);
 }
