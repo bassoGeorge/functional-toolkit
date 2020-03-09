@@ -28,3 +28,23 @@ export function constant(v) {
     return v;
   }
 }
+
+
+/**
+ * an adapter for functions which accept positional args, but we want to pass array
+ */
+export function spreadArgs(fn) {
+  return function spreadFn(argsArr) {
+    return fn(...argsArr);
+  }
+}
+
+
+/**
+ * an adapter for functions which accept an array, but we want to pass in spread out
+ */
+export function gatherArgs(fn) {
+  return function gatherFn(...args) {
+    return fn(args);
+  }
+}

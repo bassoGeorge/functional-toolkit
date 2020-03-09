@@ -1,4 +1,4 @@
-import {constant, identity, unary} from "./base";
+import {constant, gatherArgs, identity, spreadArgs, unary} from "./base";
 
 describe(unary, () => {
   it("forces only one argument through to the given function", () => {
@@ -33,5 +33,35 @@ describe(identity, () => {
 describe(constant, () => {
   it("creates a thunk for a value", () => {
     expect(constant(10)()).toEqual(10);
+  })
+})
+
+
+describe(spreadArgs, () => {
+  it('creates a function which spreads the given array input and passes it to the function', () => {
+    const target = jest.fn(),
+          adapted = spreadArgs(target);
+
+    adapted([1, 2, 3])
+
+    expect(target).toBeCalledWith(1,2,3);
+  })
+})
+
+describe(gatherArgs, () => {
+  it('creates a function which gathers the spread arguments into an array and passes it to the function', () => {
+    const target = jest.fn(),
+          adapted = gatherArgs(target)
+
+    adapted(1, 2, 3, 4);
+
+    expect(target).toBeCalledWith([1, 2, 3, 4])
+  })
+
+  it('works especially well in reduce kind of situations', () => {
+    function sum([v1, v2]) { return v1 + v2 }
+
+    const total = [1, 2, 3].reduce(gatherArgs(sum));
+    expect(total).toEqual(6);
   })
 })
